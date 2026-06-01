@@ -1,0 +1,8 @@
+<%- include('../partials/layout-head', { title: 'Error', user: null }) %>
+<div class="text-center py-20">
+  <p class="text-7xl mb-4">⚠️</p>
+  <h1 class="text-3xl font-bold text-gray-800 mb-2">Error interno</h1>
+  <p class="text-gray-500 mb-6"><%= typeof error !== 'undefined' ? error : 'Ha ocurrido un error.' %></p>
+  <a href="/" class="bg-indigo-600 text-white px-6 py-2 rounded-lg hover:bg-indigo-700">Volver al catálogo</a>
+</div>
+<%- include('../partials/layout-foot') %>

@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <title><%= typeof title !== 'undefined' ? title + ' — Tienda' : 'Tienda' %></title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://unpkg.com/htmx.org@2.0.3"></script>
+    <script defer src="https://unpkg.com/alpinejs@3.x.x/dist/cdn.min.js"></script>
+</head>
+<body class="bg-gray-50 text-gray-800 min-h-screen flex flex-col">
+<nav class="bg-white shadow-sm border-b border-gray-200">
+  <div class="max-w-6xl mx-auto px-4 py-3 flex items-center justify-between">
+    <a href="/" class="text-xl font-bold text-indigo-600">🛍 Tienda</a>
+    <div class="flex items-center gap-6 text-sm">
+      <a href="/" class="text-gray-600 hover:text-indigo-600">Catálogo</a>
+      <% if (typeof user !== 'undefined' && user?.isAdmin) { %>
+        <a href="/admin" class="text-gray-600 hover:text-indigo-600">Admin</a>
+      <% } %>
+      <a href="/carrito" class="text-gray-600 hover:text-indigo-600">🛒 Carrito</a>
+      <% if (typeof user !== 'undefined' && user) { %>
+        <span class="text-gray-500">Hola, <strong><%= user.username %></strong></span>
+        <form action="/logout" method="post" class="inline">
+          <input type="hidden" name="_csrf" value="<%= typeof csrf !== 'undefined' ? csrf : '' %>"/>
+          <button type="submit" class="text-red-500 hover:underline text-sm">Salir</button>
+        </form>
+      <% } else { %>
+        <a href="/login" class="text-indigo-600 hover:underline">Ingresar</a>
+      <% } %>
+    </div>
+  </div>
+</nav>
+<% if (typeof flash !== 'undefined' && flash) { %>
+  <div class="bg-green-50 border-b border-green-200 text-green-700 text-sm text-center py-2"><%= flash %></div>
+<% } %>
+<% if (typeof error !== 'undefined' && error) { %>
+  <div class="bg-red-50 border-b border-red-200 text-red-700 text-sm text-center py-2"><%= error %></div>
+<% } %>
+<main class="flex-1 max-w-6xl mx-auto w-full px-4 py-8">

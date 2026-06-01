@@ -1,0 +1,58 @@
+<%- include('../partials/layout-head', { title: 'Admin', user }) %>
+<h1 class="text-2xl font-bold text-gray-900 mb-8">Panel de administración</h1>
+
+<div class="grid grid-cols-2 lg:grid-cols-4 gap-4 mb-10">
+  <div class="bg-white border border-gray-200 rounded-xl p-5">
+    <p class="text-xs text-gray-400 uppercase tracking-wide">Productos activos</p>
+    <p class="text-3xl font-bold text-indigo-600 mt-1"><%= stats.totalProducts %></p>
+  </div>
+  <div class="bg-white border border-gray-200 rounded-xl p-5">
+    <p class="text-xs text-gray-400 uppercase tracking-wide">Órdenes hoy</p>
+    <p class="text-3xl font-bold text-green-600 mt-1"><%= stats.ordersToday %></p>
+  </div>
+  <div class="bg-white border border-gray-200 rounded-xl p-5">
+    <p class="text-xs text-gray-400 uppercase tracking-wide">Venta total</p>
+    <p class="text-3xl font-bold text-gray-800 mt-1">$<%= Number(stats.totalRevenue).toLocaleString('es-CL') %></p>
+  </div>
+  <div class="bg-white border border-gray-200 rounded-xl p-5">
+    <p class="text-xs text-gray-400 uppercase tracking-wide">Usuarios</p>
+    <p class="text-3xl font-bold text-purple-600 mt-1"><%= stats.totalUsers %></p>
+  </div>
+</div>
+
+<div class="bg-white border border-gray-200 rounded-xl overflow-hidden mb-8">
+  <div class="px-6 py-4 border-b border-gray-100"><h2 class="font-bold text-gray-800">Órdenes recientes</h2></div>
+  <table class="w-full text-sm">
+    <thead class="bg-gray-50 text-xs text-gray-500 uppercase">
+      <tr><th class="px-6 py-3 text-left">#</th><th class="px-6 py-3 text-left">Usuario</th><th class="px-6 py-3 text-left">Total</th><th class="px-6 py-3 text-left">Estado</th></tr>
+    </thead>
+    <tbody class="divide-y divide-gray-100">
+      <% recentOrders.forEach(o => { %>
+        <tr class="hover:bg-gray-50">
+          <td class="px-6 py-3 font-medium"><%= o.id %></td>
+          <td class="px-6 py-3 text-gray-600"><%= o.username || 'Anónimo' %></td>
+          <td class="px-6 py-3 font-semibold">$<%= Number(o.total).toLocaleString('es-CL') %></td>
+          <td class="px-6 py-3"><span class="px-2 py-1 rounded-full text-xs font-medium <%= o.status === 'CONFIRMED' ? 'bg-green-100 text-green-700' : 'bg-yellow-100 text-yellow-700' %>"><%= o.status %></span></td>
+        </tr>
+      <% }) %>
+      <% if (!recentOrders.length) { %><tr><td colspan="4" class="px-6 py-8 text-center text-gray-400">Sin órdenes aún</td></tr><% } %>
+    </tbody>
+  </table>
+</div>
+
+<div class="bg-white border border-gray-200 rounded-xl overflow-hidden">
+  <div class="px-6 py-4 border-b border-gray-100"><h2 class="font-bold text-gray-800">Stock bajo (≤ 5)</h2></div>
+  <table class="w-full text-sm">
+    <thead class="bg-gray-50 text-xs text-gray-500 uppercase">
+      <tr><th class="px-6 py-3 text-left">Producto</th><th class="px-6 py-3 text-left">Variante</th><th class="px-6 py-3 text-left">Stock</th></tr>
+    </thead>
+    <tbody class="divide-y divide-gray-100">
+      <% lowStock.forEach(v => { %>
+        <tr><td class="px-6 py-3"><%= v.productName %></td><td class="px-6 py-3 text-gray-600"><%= v.variantName %></td><td class="px-6 py-3 font-bold <%= v.stock === 0 ? 'text-red-600' : 'text-orange-500' %>"><%= v.stock %></td></tr>
+      <% }) %>
+      <% if (!lowStock.length) { %><tr><td colspan="3" class="px-6 py-8 text-center text-gray-400">Todo el stock está bien ✓</td></tr><% } %>
+    </tbody>
+  </table>
+</div>
+
+<%- include('../partials/layout-foot') %>

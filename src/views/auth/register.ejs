@@ -1,0 +1,23 @@
+<%- include('../partials/layout-head', { title: 'Registro', user: null }) %>
+<div class="max-w-sm mx-auto mt-8">
+  <h1 class="text-2xl font-bold text-gray-900 mb-6 text-center">Crear cuenta</h1>
+  <% if (error) { %><div class="bg-red-50 border border-red-200 text-red-600 text-sm rounded-lg p-3 mb-4"><%= error === 'exists' ? 'Usuario o email ya existe.' : 'Datos inválidos.' %></div><% } %>
+  <form action="/register" method="post" class="bg-white border border-gray-200 rounded-xl p-6 shadow-sm space-y-4">
+    <input type="hidden" name="_csrf" value="<%= csrf %>"/>
+    <div>
+      <label class="block text-sm font-medium text-gray-700 mb-1">Usuario</label>
+      <input type="text" name="username" required class="w-full border border-gray-300 rounded-lg px-3 py-2 text-sm"/>
+    </div>
+    <div>
+      <label class="block text-sm font-medium text-gray-700 mb-1">Email</label>
+      <input type="email" name="email" required class="w-full border border-gray-300 rounded-lg px-3 py-2 text-sm"/>
+    </div>
+    <div>
+      <label class="block text-sm font-medium text-gray-700 mb-1">Contraseña</label>
+      <input type="password" name="password" required minlength="6" class="w-full border border-gray-300 rounded-lg px-3 py-2 text-sm"/>
+    </div>
+    <button type="submit" class="w-full bg-indigo-600 text-white font-semibold py-2 rounded-lg hover:bg-indigo-700">Registrarse</button>
+  </form>
+  <p class="text-center text-sm text-gray-500 mt-4"><a href="/login" class="text-indigo-600 hover:underline">Ya tengo cuenta</a></p>
+</div>
+<%- include('../partials/layout-foot') %>

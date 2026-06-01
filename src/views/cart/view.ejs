@@ -1,0 +1,62 @@
+<%- include('../partials/layout-head', { title: 'Carrito', user }) %>
+
+<h1 class="text-2xl font-bold text-gray-900 mb-8">Tu carrito</h1>
+
+<% if (!items.length) { %>
+  <div class="text-center py-16 text-gray-400">
+    <p class="text-5xl mb-4">🛒</p>
+    <p class="text-lg mb-4">Tu carrito está vacío</p>
+    <a href="/" class="bg-indigo-600 text-white px-6 py-2 rounded-lg hover:bg-indigo-700">Ver catálogo</a>
+  </div>
+<% } else { %>
+  <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
+    <div class="lg:col-span-2 space-y-4">
+      <% items.forEach(item => { %>
+        <div class="bg-white border border-gray-200 rounded-xl p-4 flex items-center gap-4">
+          <div class="bg-indigo-50 rounded-lg w-16 h-16 flex items-center justify-center text-2xl flex-shrink-0">🛍</div>
+          <div class="flex-1">
+            <p class="font-semibold text-gray-800"><%= item.productName %></p>
+            <p class="text-sm text-gray-500"><%= item.variantName %></p>
+            <p class="text-indigo-600 font-bold text-sm">$<%= Number(item.price).toLocaleString('es-CL') %></p>
+          </div>
+          <form action="/carrito/actualizar" method="post" class="flex items-center gap-2">
+            <input type="hidden" name="_csrf" value="<%= csrf %>"/>
+            <input type="hidden" name="variantId" value="<%= item.variantId %>"/>
+            <input type="number" name="quantity" value="<%= item.quantity %>" min="1" max="99"
+                   class="w-16 border border-gray-300 rounded px-2 py-1 text-sm text-center"
+                   onchange="this.form.submit()"/>
+          </form>
+          <p class="font-semibold text-sm w-24 text-right">$<%= (Number(item.price)*item.quantity).toLocaleString('es-CL') %></p>
+          <form action="/carrito/eliminar/<%= item.variantId %>" method="post">
+            <input type="hidden" name="_csrf" value="<%= csrf %>"/>
+            <button type="submit" class="text-red-400 hover:text-red-600 text-xl" onclick="this.disabled=true;this.form.submit()">✕</button>
+          </form>
+        </div>
+      <% }) %>
+    </div>
+
+    <div class="bg-white border border-gray-200 rounded-xl p-6 h-fit">
+      <h2 class="font-bold text-gray-800 text-lg mb-4">Resumen</h2>
+      <div class="flex justify-between font-bold text-gray-900 mb-4">
+        <span>Total</span>
+        <span class="text-indigo-600">$<%= Number(total).toLocaleString('es-CL') %></span>
+      </div>
+      <form action="/carrito/checkout" method="post" class="space-y-3">
+        <input type="hidden" name="_csrf" value="<%= csrf %>"/>
+        <div>
+          <label class="block text-xs text-gray-500 mb-1">Nombre envío</label>
+          <input type="text" name="shippingName" required class="w-full border border-gray-300 rounded px-3 py-2 text-sm"/>
+        </div>
+        <div>
+          <label class="block text-xs text-gray-500 mb-1">Dirección</label>
+          <textarea name="shippingAddress" required rows="2" class="w-full border border-gray-300 rounded px-3 py-2 text-sm"></textarea>
+        </div>
+        <button type="submit" class="w-full bg-indigo-600 text-white font-semibold py-3 rounded-lg hover:bg-indigo-700">
+          Confirmar pedido
+        </button>
+      </form>
+    </div>
+  </div>
+<% } %>
+
+<%- include('../partials/layout-foot') %>

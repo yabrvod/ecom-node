@@ -1,0 +1,23 @@
+services:
+  ecom-node:
+    build: .
+    container_name: ecom-node
+    restart: unless-stopped
+    environment:
+      NODE_ENV: production
+      PORT: 3001
+      DATABASE_URL: ${DATABASE_URL}
+      SESSION_SECRET: ${SESSION_SECRET}
+    ports:
+      - "127.0.0.1:9094:3001"
+    networks:
+      - ecommerce-network
+    deploy:
+      resources:
+        limits:
+          memory: 256M
+
+networks:
+  ecommerce-network:
+    external: true
+    name: e-commerce_ecommerce-network
